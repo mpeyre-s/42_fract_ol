@@ -6,7 +6,7 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:34:45 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/10 15:46:58 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/10 21:06:54 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,39 +60,59 @@ int	key_hook(int keycode, void *param)
 	return (0);
 }
 
-int	mouse_hook(int button, int x, int y, void *param)
+void adjust_aspect_ratio(t_graph *graph)
+{
+	double aspect_ratio = (double)graph->width / graph->height;
+	double real_range = graph->max_real - graph->min_real;
+	double img_range = graph->max_img - graph->min_img;
+
+	if (real_range / img_range > aspect_ratio)
+	{
+		double adjusted_img_range = real_range / aspect_ratio;
+		double img_center = (graph->max_img + graph->min_img) / 2.0;
+		graph->min_img = img_center - adjusted_img_range / 2.0;
+		graph->max_img = img_center + adjusted_img_range / 2.0;
+	}
+	else
+	{
+		double adjusted_real_range = img_range * aspect_ratio;
+		double real_center = (graph->max_real + graph->min_real) / 2.0;
+		graph->min_real = real_center - adjusted_real_range / 2.0;
+		graph->max_real = real_center + adjusted_real_range / 2.0;
+	}
+}
+
+int mouse_hook(int button, int x, int y, void *param)
 {
 	t_data *img = ((t_data **)param)[0];
 	void *mlx = ((void **)param)[1];
 	void *win = ((void **)param)[2];
 	t_graph *graph = ((t_graph **)param)[3];
 
-	double new_x = graph->min_real + ((double)x / graph->width)*(graph->max_real - graph->min_real);
-	double new_y = graph->min_img + ((double)y / graph->height)*(graph->max_img - graph->min_img);
+	double new_x = graph->min_real + ((double)x / graph->width) * (graph->max_real - graph->min_real);
+	double new_y = graph->min_img + ((double)y / graph->height) * (graph->max_img - graph->min_img);
 
-	if (button == 4)
-	{
-		graph->min_real /= 1.5;
-		graph->max_real /= 1.5;
-		graph->min_img /= 1.5;
-		graph->max_img /= 1.5;
+	double zoom_factor = (button == 4) ? 1.5 : (button == 5) ? (1 / 1.5) : 1.0;
+	if (zoom_factor == 1.0)
+		return (0);
 
-	}
-	else if (button == 5)
-	{
-		graph->min_real *= 1.5;
-		graph->max_real *= 1.5;
-		graph->min_img *= 1.5;
-		graph->max_img *= 1.5;
-	}
+	double new_real_range = (graph->max_real - graph->min_real) / zoom_factor;
+	double new_img_range = (graph->max_img - graph->min_img) / zoom_factor;
 
-	graph->min_real = new_x - ((double)x / graph->width)*(graph->max_real - graph->min_real);
-	graph->min_img = new_y - ((double)y / graph->height)*(graph->max_img - graph->min_img);
+	graph->min_real = new_x - ((double)x / graph->width) * new_real_range;
+	graph->max_real = graph->min_real + new_real_range;
+
+	graph->min_img = new_y - ((double)y / graph->height) * new_img_range;
+	graph->max_img = graph->min_img + new_img_range;
+
+	adjust_aspect_ratio(graph);
 
 	print_canevas(img, graph);
 	mlx_put_image_to_window(mlx, win, img->img, 0, 0);
+
 	return (0);
 }
+
 
 int	close_hook(void *param)
 {
@@ -120,7 +140,7 @@ unsigned int	init_iterate_pixel(int x, int y, t_graph graph)
 	zi = 0;
 	i = 0;
 
-	while (zr * zr + zi * zi < (double)4.0 && i < 100)
+	while (zr * zr + zi * zi < (double)4.0 && i < 256)
 	{
 		temp_zr = zr* zr - zi * zi + pixel.x_graph;
 		zi = 2 * zr * zi + pixel.y_graph;
@@ -128,14 +148,12 @@ unsigned int	init_iterate_pixel(int x, int y, t_graph graph)
 		i++;
 	}
 
-	if (i == 100)
+	if (i == 256)
 		return (0x000000);
 
-	unsigned int color = (i * 5) % 256;
-	unsigned int red = (color * 2) % 256;
-	unsigned int green = (color * 5) % 256;
-	unsigned int blue = (color * 3) % 256;
-
+	unsigned int red = (i * 1) % 256;
+	unsigned int green = (i * 3) % 256;
+	unsigned int blue = (i * 5) % 256;
 	return (red << 16 | green << 8 | blue);
 }
 
@@ -152,10 +170,11 @@ void	mandelbrot(void)
 
 	graph.min_real = -2.0;
 	graph.max_real = 1.0;
-    graph.min_img = -1.5;
-    graph.max_img = 1.5;
-    graph.width = width;
-    graph.height = height;
+	graph.min_img = -1.5;
+	graph.max_img = 1.5;
+	graph.width = width;
+	graph.height = height;
+	adjust_aspect_ratio(&graph);
 
 	mlx = mlx_init();
 	win = mlx_new_window(mlx, width, height, "FRACTAL");
@@ -165,7 +184,7 @@ void	mandelbrot(void)
 
 	print_canevas(&img, &graph);
 
-    mlx_put_image_to_window(mlx, win, img.img, 0, 0);
+	mlx_put_image_to_window(mlx, win, img.img, 0, 0);
 
 	params[0] = &img;
 	params[1] = mlx;
