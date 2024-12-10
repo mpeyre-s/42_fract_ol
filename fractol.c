@@ -6,7 +6,7 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:34:45 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/09 16:44:19 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/10 15:46:58 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,40 @@ int	key_hook(int keycode, void *param)
 	return (0);
 }
 
+int	mouse_hook(int button, int x, int y, void *param)
+{
+	t_data *img = ((t_data **)param)[0];
+	void *mlx = ((void **)param)[1];
+	void *win = ((void **)param)[2];
+	t_graph *graph = ((t_graph **)param)[3];
+
+	double new_x = graph->min_real + ((double)x / graph->width)*(graph->max_real - graph->min_real);
+	double new_y = graph->min_img + ((double)y / graph->height)*(graph->max_img - graph->min_img);
+
+	if (button == 4)
+	{
+		graph->min_real /= 1.5;
+		graph->max_real /= 1.5;
+		graph->min_img /= 1.5;
+		graph->max_img /= 1.5;
+
+	}
+	else if (button == 5)
+	{
+		graph->min_real *= 1.5;
+		graph->max_real *= 1.5;
+		graph->min_img *= 1.5;
+		graph->max_img *= 1.5;
+	}
+
+	graph->min_real = new_x - ((double)x / graph->width)*(graph->max_real - graph->min_real);
+	graph->min_img = new_y - ((double)y / graph->height)*(graph->max_img - graph->min_img);
+
+	print_canevas(img, graph);
+	mlx_put_image_to_window(mlx, win, img->img, 0, 0);
+	return (0);
+}
+
 int	close_hook(void *param)
 {
 	t_data *img = ((t_data **)param)[0];
@@ -69,51 +103,115 @@ int	close_hook(void *param)
 	exit_fractol(mlx, win, img);
 	return (0);
 }
-int	handle_args(char c)
+
+unsigned int	init_iterate_pixel(int x, int y, t_graph graph)
 {
-	if (c == 'M' || c == 'm' || c == '1' || c == 'J' || c == 'j' || c == '2')
-		return (1);
-	return (0);
+	t_pixel		pixel;
+	double		zr;
+	double		temp_zr;
+	double		zi;
+
+	int			i;
+
+	pixel.x_graph = graph.min_real + ((double)x / graph.width)*(graph.max_real - graph.min_real);
+	pixel.y_graph = graph.min_img + ((double)y / graph.height)*(graph.max_img - graph.min_img);
+
+	zr = 0;
+	zi = 0;
+	i = 0;
+
+	while (zr * zr + zi * zi < (double)4.0 && i < 100)
+	{
+		temp_zr = zr* zr - zi * zi + pixel.x_graph;
+		zi = 2 * zr * zi + pixel.y_graph;
+		zr = temp_zr;
+		i++;
+	}
+
+	if (i == 100)
+		return (0x000000);
+
+	unsigned int color = (i * 5) % 256;
+	unsigned int red = (color * 2) % 256;
+	unsigned int green = (color * 5) % 256;
+	unsigned int blue = (color * 3) % 256;
+
+	return (red << 16 | green << 8 | blue);
 }
 
-void	blue_wall(void)
+void	mandelbrot(void)
 {
+	int		width = 1280;
+	int		height = 720;
 	void	*mlx;
 	void	*win;
 	t_data	img;
-	int		largeur = 800;
-	int		hauteur = 600;
-	void	*params[3];
+	t_graph	graph;
+
+	void	*params[4];
+
+	graph.min_real = -2.0;
+	graph.max_real = 1.0;
+    graph.min_img = -1.5;
+    graph.max_img = 1.5;
+    graph.width = width;
+    graph.height = height;
 
 	mlx = mlx_init();
-	win = mlx_new_window(mlx, largeur, hauteur, "BLUE WALL");
-	img.img = mlx_new_image(mlx, largeur, hauteur);
+	win = mlx_new_window(mlx, width, height, "FRACTAL");
+
+	img.img = mlx_new_image(mlx, width, height);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
-	for (int y = 0; y < hauteur; y++)
-	{
-		for (int x = 0; x < largeur; x++)
-		{
-			char *dst = img.addr + (y * img.line_length + x * (img.bits_per_pixel / 8));
-			*(unsigned int *)dst = 0x000000FF;
-		}
-	}
-	mlx_put_image_to_window(mlx, win, img.img, 0, 0);
+
+	print_canevas(&img, &graph);
+
+    mlx_put_image_to_window(mlx, win, img.img, 0, 0);
 
 	params[0] = &img;
 	params[1] = mlx;
 	params[2] = win;
+	params[3] = &graph;
 
 	mlx_hook(win, 2, 1L << 0, key_hook, params);
 	mlx_hook(win, 17, 1L << 17, close_hook, params);
+	mlx_mouse_hook(win, mouse_hook, params);
 
 	mlx_loop(mlx);
 }
 
+void	print_canevas(t_data *img, t_graph *graph)
+{
+	int		x;
+	int		y;
+	char	*dst;
+
+	y = 0;
+	while (y < graph->height)
+	{
+		x = 0;
+		while (x < graph->width)
+		{
+			dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
+			*(unsigned int *)dst = init_iterate_pixel(x, y, *graph);
+			x++;
+		}
+		y++;
+	}
+}
+void	handle_args(char c)
+{
+	if (c == 'M' || c == 'm' || c == '1')
+		mandelbrot();
+	else if (c == 'J' || c == 'j' || c == '2')
+		mandelbrot();
+	else
+		wiki();
+}
+
 int main (int argc, char *argv[])
 {
-	if (argc < 2 || !handle_args(argv[1][0]))
+	if (argc < 2)
 		return(wiki(), 0);
-	if (argv[1][0] == 'M')
-		blue_wall();
+	handle_args(argv[1][0]);
 	return (0);
 }
