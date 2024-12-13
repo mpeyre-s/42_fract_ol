@@ -13,7 +13,7 @@ LIBFT       = $(LIBFT_PATH)$(LIBFT_NAME)
 
 INC         = -I ./libft/ -I ./minilibx/
 
-SRC         = fractol.c
+SRC         = fractol.c render.c hooks.c mandelbrot.c
 OBJ         = $(SRC:.c=.o)
 
 all: $(NAME)
