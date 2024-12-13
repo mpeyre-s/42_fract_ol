@@ -6,7 +6,7 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:50:35 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/13 17:19:47 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/13 19:23:19 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct s_pixel
 
 typedef struct s_fractol
 {
+	char	type;
 	void	*mlx;
 	void	*win;
 	void	*img;
@@ -46,6 +47,7 @@ typedef struct s_fractol
 // fractol.c
 void			wiki(void);
 void			handle_args(char c);
+void			init(char c);
 
 // render.c
 void			adjust_img_range(t_fractol *fractol, double real_range,
@@ -53,7 +55,7 @@ void			adjust_img_range(t_fractol *fractol, double real_range,
 void			adjust_real_range(t_fractol *fractol, double img_range,
 					double aspect_ratio);
 void			adjust_aspect_ratio(t_fractol *fractol);
-unsigned int	init_iterate_pixel(int x, int y, t_fractol *fractol);
+unsigned int	iterate_pixel(int x, int y, t_fractol *fractol);
 void			print_canvas(t_fractol *fractol);
 
 // hooks.c
@@ -63,6 +65,6 @@ int				close_hook(t_fractol *fractol);
 void			exit_fractol(t_fractol *fractol);
 
 // mandelbrot.c
-void			mandelbrot(void);
+unsigned int	mandelbrot(int x, int y, t_fractol *fractol);
 
 #endif

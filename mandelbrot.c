@@ -6,34 +6,35 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 17:23:49 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/13 17:24:08 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/13 19:24:14 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-void	mandelbrot(void)
+unsigned int	mandelbrot(int x, int y, t_fractol *fractol)
 {
-	t_fractol	fractol;
+	t_pixel	pixel;
+	double	zr;
+	double	zi;
+	double	temp_zr;
+	int		i;
 
-	fractol.width = 1280;
-	fractol.height = 720;
-	fractol.min_real = -2.0;
-	fractol.max_real = 1.0;
-	fractol.min_img = -1.5;
-	fractol.max_img = 1.5;
-	fractol.max_iter = 256;
-	fractol.mlx = mlx_init();
-	fractol.win = mlx_new_window(fractol.mlx, fractol.width, fractol.height,
-			"FRACTAL");
-	fractol.img = mlx_new_image(fractol.mlx, fractol.width, fractol.height);
-	fractol.addr = mlx_get_data_addr(fractol.img, &fractol.bits_per_pixel,
-			&fractol.line_length, &fractol.endian);
-	adjust_aspect_ratio(&fractol);
-	print_canvas(&fractol);
-	mlx_put_image_to_window(fractol.mlx, fractol.win, fractol.img, 0, 0);
-	mlx_hook(fractol.win, 2, 1L << 0, key_hook, &fractol);
-	mlx_hook(fractol.win, 17, 1L << 17, close_hook, &fractol);
-	mlx_mouse_hook(fractol.win, mouse_hook, &fractol);
-	mlx_loop(fractol.mlx);
+	pixel.x_graph = fractol->min_real + ((double)x / fractol->width)
+		* (fractol->max_real - fractol->min_real);
+	pixel.y_graph = fractol->min_img + ((double)y / fractol->height)
+		* (fractol->max_img - fractol->min_img);
+	zr = 0;
+	zi = 0;
+	i = 0;
+	while (zr * zr + zi * zi < 4.0 && i < fractol->max_iter)
+	{
+		temp_zr = zr * zr - zi * zi + pixel.x_graph;
+		zi = 2 * zr * zi + pixel.y_graph;
+		zr = temp_zr;
+		i++;
+	}
+	if (i == fractol->max_iter)
+		return (0x000000);
+	return ((i * 1) % 256 << 16 | (i * 3) % 256 << 8 | (i * 5) % 256);
 }
