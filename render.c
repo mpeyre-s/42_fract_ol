@@ -6,7 +6,7 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 17:22:35 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/15 18:51:47 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/15 22:22:25 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,6 @@ void	adjust_aspect_ratio(t_fractol *fractol)
 		adjust_real_range(fractol, img_range, aspect_ratio);
 }
 
-unsigned int	iterate_pixel(int x, int y, t_fractol *fractol)
-{
-	if (fractol->type == 'm')
-		return (mandelbrot(x, y, fractol));
-	// else if (fractol->type == 'j')
-	// 	return (julia(x, y, fractol));
-	return (0x000000);
-}
-
 void	print_canvas(t_fractol *fractol)
 {
 	int		x;
@@ -74,9 +65,30 @@ void	print_canvas(t_fractol *fractol)
 		{
 			dst = fractol->addr + (y * fractol->line_length + x
 					* (fractol->bits_per_pixel / 8));
-			*(unsigned int *)dst = iterate_pixel(x, y, fractol);
+			if (fractol->type == 'm')
+				*(unsigned int *)dst = mandelbrot(x, y, fractol);
+			// else if (fractol->type == 'j')
+			// 	*(unsigned int *)dst = julia(x, y, fractol);
+			else
+				*(unsigned int *)dst = 0x000000;
 			x++;
 		}
 		y++;
 	}
+}
+
+unsigned int	get_color(int i, t_fractol *fractol)
+{
+	unsigned int	color;
+	unsigned int	rgb[3];
+
+	if (i == fractol->max_iter)
+		return (0x000000);
+	if (!fractol->color)
+		return ((i * 1 % 256) << 16 | (i * 3 % 256) << 8 | (i * 5 % 256));
+	color = fractol->color;
+	rgb[0] = ((color >> 16) & 0xFF) * i / fractol->max_iter;
+	rgb[1] = ((color >> 8) & 0xFF) * i / fractol->max_iter;
+	rgb[2] = (color & 0xFF) * i / fractol->max_iter;
+	return ((rgb[0] & 0xFF) << 16 | (rgb[1] & 0xFF) << 8 | (rgb[2] & 0xFF));
 }
