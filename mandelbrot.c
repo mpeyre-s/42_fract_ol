@@ -6,7 +6,7 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 17:23:49 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/13 19:24:14 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/15 21:11:35 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,21 @@ unsigned int	mandelbrot(int x, int y, t_fractol *fractol)
 		zr = temp_zr;
 		i++;
 	}
-	if (i == fractol->max_iter)
+	return (get_color(i, fractol));
+}
+
+unsigned int	get_color(int i, t_fractol *fractol)
+{
+	if (!fractol->color)
+	{
+		if (i == fractol->max_iter)
+			return (0x000000);
+		return ((i * 1) % 256 << 16 | (i * 3) % 256 << 8 | (i * 5) % 256);
+	}
+	else
+	{
+		if (i == fractol->max_iter)
+			return (fractol->color);
 		return (0x000000);
-	return ((i * 1) % 256 << 16 | (i * 3) % 256 << 8 | (i * 5) % 256);
+	}
 }

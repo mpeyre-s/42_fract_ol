@@ -6,7 +6,7 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:34:45 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/13 19:13:18 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/15 19:04:26 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,15 @@ void	wiki(void)
 	ft_printf("Exiting properly...");
 }
 
-void	init(char c)
+t_fractol	init_tfractol(char type, double c1, double c2, unsigned int color)
 {
 	t_fractol	fractol;
 
-	fractol.type = c;
+	fractol.type = type;
+	fractol.c1 = c1;
+	fractol.c2 = c2;
+	if (color)
+		fractol.color = color;
 	fractol.width = 1280;
 	fractol.height = 720;
 	fractol.min_real = -2.0;
@@ -59,6 +63,14 @@ void	init(char c)
 	fractol.img = mlx_new_image(fractol.mlx, fractol.width, fractol.height);
 	fractol.addr = mlx_get_data_addr(fractol.img, &fractol.bits_per_pixel,
 			&fractol.line_length, &fractol.endian);
+	return (fractol);
+}
+
+void	init(char type, double c1, double c2, unsigned int color)
+{
+	t_fractol	fractol;
+
+	fractol = init_tfractol(type, c1, c2, color);
 	adjust_aspect_ratio(&fractol);
 	print_canvas(&fractol);
 	mlx_put_image_to_window(fractol.mlx, fractol.win, fractol.img, 0, 0);
@@ -68,12 +80,28 @@ void	init(char c)
 	mlx_loop(fractol.mlx);
 }
 
-void	handle_args(char c)
+void	handle_args(int argc, char *argv[])
 {
-	if (c == 'M' || c == 'm' || c == '1')
-		init('m');
-	else if (c == 'J' || c == 'j' || c == '2')
-		init('j');
+	if (argv[1][0] == 'M' || argv[1][0] == 'm' || argv[1][0] == '1')
+	{
+		if (argc == 2)
+			init('m', 0, 0, 0);
+		else if (argc == 3)
+			init('m', 0, 0, ft_atouint(argv[2]));
+		else
+			wiki();
+	}
+	// else if (argv[1][0] == 'J' || argv[1][0] == 'j' || argv[1][0] == '2')
+	// {
+	// 	if (argc == 2)
+	// 		init(argv[1][0], -0.8, 0.156, NULL);
+	// 	else if (argc == 4)
+	// 		init(argv[1][0], ft_atodouble(argv[2]), ft_atodouble(argv[3]), NULL);
+	// 	else if (argc == 5)
+	// 		init(argv[1][0], ft_atodouble(argv[2]), ft_atodouble(argv[3]), ft_atouint(argv[4]));
+	// 	else
+	// 		wiki();
+	// }
 	else
 		wiki();
 }
@@ -82,6 +110,6 @@ int	main(int argc, char *argv[])
 {
 	if (argc < 2)
 		return (wiki(), 0);
-	handle_args(argv[1][0]);
+	handle_args(argc, argv);
 	return (0);
 }

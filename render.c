@@ -6,7 +6,7 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 17:22:35 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/13 19:23:11 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/15 18:51:47 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ unsigned int	iterate_pixel(int x, int y, t_fractol *fractol)
 {
 	if (fractol->type == 'm')
 		return (mandelbrot(x, y, fractol));
-	else if (fractol->type == 'j')
-		return (0x000000);
+	// else if (fractol->type == 'j')
+	// 	return (julia(x, y, fractol));
 	return (0x000000);
 }
 

@@ -13,8 +13,8 @@ FILES = $(SRC_DIR)/ft_atoi.c $(SRC_DIR)/ft_bzero.c $(SRC_DIR)/ft_calloc.c $(SRC_
 		$(SRC_DIR)/ft_lstnew.c $(SRC_DIR)/ft_lstadd_front.c $(SRC_DIR)/ft_lstsize.c $(SRC_DIR)/ft_lstlast.c \
 		$(SRC_DIR)/ft_lstadd_back.c $(SRC_DIR)/ft_lstdelone.c $(SRC_DIR)/ft_lstclear.c $(SRC_DIR)/ft_lstiter.c \
 		$(SRC_DIR)/ft_lstmap.c $(SRC_DIR)/ft_atoi_base.c $(PRINTF_DIR)/ft_printf.c $(PRINTF_DIR)/printhex.c \
-		$(PRINTF_DIR)/printletters.c $(PRINTF_DIR)/printnumbers.c \
-		$(PRINTF_DIR)/printptr.c
+		$(PRINTF_DIR)/printletters.c $(PRINTF_DIR)/printnumbers.c $(PRINTF_DIR)/printptr.c \
+		$(SRC_DIR)/ft_atouint.c $(SRC_DIR)/ft_atodouble.c
 OBJ_DIR = objects
 OBJ = $(addprefix $(OBJ_DIR)/, $(FILES:$(SRC_DIR)/%.c=%.o))
 
