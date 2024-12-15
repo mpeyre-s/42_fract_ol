@@ -6,7 +6,7 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 17:23:49 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/15 21:11:35 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/15 22:11:30 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,16 @@ unsigned int	mandelbrot(int x, int y, t_fractol *fractol)
 
 unsigned int	get_color(int i, t_fractol *fractol)
 {
-	if (!fractol->color)
-	{
-		if (i == fractol->max_iter)
-			return (0x000000);
-		return ((i * 1) % 256 << 16 | (i * 3) % 256 << 8 | (i * 5) % 256);
-	}
-	else
-	{
-		if (i == fractol->max_iter)
-			return (fractol->color);
+	unsigned int	color;
+	unsigned int	rgb[3];
+
+	if (i == fractol->max_iter)
 		return (0x000000);
-	}
+	if (!fractol->color)
+		return ((i * 1 % 256) << 16 | (i * 3 % 256) << 8 | (i * 5 % 256));
+	color = fractol->color;
+	rgb[0] = ((color >> 16) & 0xFF) * i / fractol->max_iter;
+	rgb[1] = ((color >> 8) & 0xFF) * i / fractol->max_iter;
+	rgb[2] = (color & 0xFF) * i / fractol->max_iter;
+	return ((rgb[0] & 0xFF) << 16 | (rgb[1] & 0xFF) << 8 | (rgb[2] & 0xFF));
 }
