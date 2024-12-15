@@ -6,7 +6,7 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:34:45 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/15 19:04:26 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/15 22:31:10 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	handle_args(int argc, char *argv[])
 	{
 		if (argc == 2)
 			init('m', 0, 0, 0);
-		else if (argc == 3)
+		else if (argc == 3 && ft_atouint(argv[2]))
 			init('m', 0, 0, ft_atouint(argv[2]));
 		else
 			wiki();
