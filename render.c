@@ -6,7 +6,7 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 17:22:35 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/15 22:22:25 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/16 18:57:32 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,8 @@ void	print_canvas(t_fractol *fractol)
 					* (fractol->bits_per_pixel / 8));
 			if (fractol->type == 'm')
 				*(unsigned int *)dst = mandelbrot(x, y, fractol);
-			// else if (fractol->type == 'j')
-			// 	*(unsigned int *)dst = julia(x, y, fractol);
-			else
-				*(unsigned int *)dst = 0x000000;
+			else if (fractol->type == 'j')
+				*(unsigned int *)dst = julia(x, y, fractol);
 			x++;
 		}
 		y++;

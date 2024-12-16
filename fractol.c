@@ -6,7 +6,7 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:34:45 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/15 22:55:38 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/16 18:57:56 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ void	wiki(void)
 	ft_printf("values. These parameters correspond to a complex number that ");
 	ft_printf("modifies the shape of the Julia fractal. They must be ");
 	ft_printf("fractional numbers ranging from -2.0 to 2.0. Example :\n\n");
-	ft_printf("./fractol J 0.285 -0.01\n\n");
+	ft_printf("./fract-ol J 0.285 -0.01\n\n");
 	ft_printf("You can also specify a hexadecimal color to customize the ");
 	ft_printf("fractal's appearance :\n\n");
-	ft_printf("./fractol M 00CCFF\n\n");
+	ft_printf("./fract-ol M 00CCFF\n\n");
 	ft_printf("However, for the Julia set, the color option can only be ");
 	ft_printf("used after specifying the calculation values :\n\n");
-	ft_printf("./fractol J -0.4 0.6 65CD87\n\n");
+	ft_printf("./fract-ol J -0.4 0.6 65CD87\n\n");
 	ft_printf("========== FRACT-OL CONTROLS ==========\n\n");
 	ft_printf("|------------------------|--------------------|\n");
 	ft_printf("|      scroll wheel      |  Zoom in and out   |\n");
@@ -89,15 +89,15 @@ void	handle_args(int argc, char *argv[])
 		else if (argc == 3 && ft_atouint(argv[2]))
 			init('m', 0, 0, ft_atouint(argv[2]));
 	}
-	// else if (argv[1][0] == 'J' || argv[1][0] == 'j' || argv[1][0] == '2')
-	// {
-	// 	if (argc == 2)
-	// 		init(argv[1][0], -0.8, 0.156, NULL);
-	// 	else if (argc == 4)
-	// 		init(argv[1][0], ft_atodouble(argv[2]), ft_atodouble(argv[3]), NULL);
-	// 	else if (argc == 5)
-	// 		init(argv[1][0], ft_atodouble(argv[2]), ft_atodouble(argv[3]), ft_atouint(argv[4]));
-	// }
+	else if (argv[1][0] == 'J' || argv[1][0] == 'j' || argv[1][0] == '2')
+	{
+		if (argc == 2)
+			init('j', -0.8, 0.156, 0);
+		else if (argc == 4 && ft_atodouble(argv[2]) && ft_atodouble(argv[3]))
+			init('j', ft_atodouble(argv[2]), ft_atodouble(argv[3]), 0);
+		else if (argc == 5 && ft_atodouble(argv[2]) && ft_atodouble(argv[3]) && ft_atouint(argv[4]))
+			init('j', ft_atodouble(argv[2]), ft_atodouble(argv[3]), ft_atouint(argv[4]));
+	}
 	wiki();
 }
 

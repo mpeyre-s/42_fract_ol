@@ -6,7 +6,7 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:50:35 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/15 22:21:52 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/16 18:14:14 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ typedef struct s_fractol
 	int				color_scheme;
 }						t_fractol;
 
-// fractol.c
+// main.c
 void			wiki(void);
 void			handle_args(int argc, char *argv[]);
 void			init(char type, double c1, double c2, unsigned int color);
@@ -68,10 +68,8 @@ int				mouse_hook(int button, int x, int y, t_fractol *fractol);
 int				close_hook(t_fractol *fractol);
 void			exit_fractol(t_fractol *fractol);
 
-// mandelbrot.c
+// fractal_sets.c
 unsigned int	mandelbrot(int x, int y, t_fractol *fractol);
-
-// julia.c
-//unsigned int	julia(int x, int y, t_fractol *fractol);
+unsigned int	julia(int x, int y, t_fractol *fractol);
 
 #endif
