@@ -6,7 +6,7 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:50:35 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/16 18:14:14 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/16 19:05:54 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ typedef struct s_fractol
 void			wiki(void);
 void			handle_args(int argc, char *argv[]);
 void			init(char type, double c1, double c2, unsigned int color);
-t_fractol		init_tfractol(char type, double c1, double c2, unsigned int color);
+t_fractol		init_tfractol(char type, double c1, double c2,
+					unsigned int color);
 
 // render.c
 void			adjust_img_range(t_fractol *fractol, double real_range,
