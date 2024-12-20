@@ -6,7 +6,7 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:34:45 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/16 19:11:07 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/20 11:43:00 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,7 @@ t_fractol	init_tfractol(char type, double c1, double c2, unsigned int color)
 	fractol.type = type;
 	fractol.c1 = c1;
 	fractol.c2 = c2;
-	if (color)
-		fractol.color = color;
+	fractol.color = color;
 	fractol.width = 1280;
 	fractol.height = 720;
 	fractol.min_real = -2.0;

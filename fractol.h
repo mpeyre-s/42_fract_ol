@@ -6,7 +6,7 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:50:35 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/16 19:05:54 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/20 11:40:29 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ unsigned int	get_color(int i, t_fractol *fractol);
 int				key_hook(int keycode, t_fractol *fractol);
 int				mouse_hook(int button, int x, int y, t_fractol *fractol);
 int				close_hook(t_fractol *fractol);
-void			exit_fractol(t_fractol *fractol);
+int				exit_fractol(t_fractol *fractol);
 
 // fractal_sets.c
 unsigned int	mandelbrot(int x, int y, t_fractol *fractol);

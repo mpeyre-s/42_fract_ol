@@ -6,7 +6,7 @@
 /*   By: mathispeyre <mathispeyre@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 17:19:54 by mathispeyre       #+#    #+#             */
-/*   Updated: 2024/12/18 16:51:44 by mathispeyre      ###   ########.fr       */
+/*   Updated: 2024/12/20 11:42:30 by mathispeyre      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,17 +51,16 @@ int	close_hook(t_fractol *fractol)
 	return (0);
 }
 
-void	exit_fractol(t_fractol *fractol)
+int	exit_fractol(t_fractol *fractol)
 {
-	if (!fractol->img)
-		exit(0);
+	if (!fractol)
+		return (0);
 	if (fractol->img)
 		mlx_destroy_image(fractol->mlx, fractol->img);
-	if (fractol->win && fractol->mlx)
-		mlx_destroy_window(fractol->mlx, fractol->win);
+	if (fractol->win)
+		mlx_destroy_image(fractol->mlx, fractol->win);
 	if (fractol->mlx)
 	{
-		mlx_loop_end(fractol->mlx);
 		mlx_destroy_display(fractol->mlx);
 		free(fractol->mlx);
 	}
