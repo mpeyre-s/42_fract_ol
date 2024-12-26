@@ -15,3 +15,10 @@
 - **Event Handling**: Development of skills in managing user input to allow real-time interaction with fractals.
 
 - **Advanced Algorithms**: Strengthened ability to design and implement complex algorithms for generating different types of fractals.
+  
+---
+
+# ➡️ Screenshots
+
+![image](https://github.com/mpeyre-s/42_fract_ol/raw/main/screenshots/mandelbrot.png)
+![image](https://github.com/mpeyre-s/42_fract_ol/raw/main/screenshots/julia.png)
