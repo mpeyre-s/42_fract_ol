@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://github.com/mpeyre-s/42_fractol"><img src="https://github.com/mpeyre-s/42_project_badges/raw/main/badges/fractol.svg"/></a>
+  <a href="https://github.com/mpeyre-s/42_fractol"><img src="https://github.com/mpeyre-s/42_project_badges/raw/main/badges/fractol_bonus.svg"/></a>
   <p>The aim of this project is to create a program that generates fractals, allowing for an interactive exploration of mathematics and graphical programming.</p>
   <br>
 </div>
